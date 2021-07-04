@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NETSandbox.Entities;
+using System;
 
 namespace NETSandbox
 {
@@ -6,7 +7,21 @@ namespace NETSandbox
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Customer customer = new()
+            {
+                Name = "Juozas",
+                LastName = "Juozaitis",
+                IsIndividual = true,
+                Address = "Laisves al. Kaunas",
+                Country = "LTU"
+            };
+
+            ServiceProvider serviceProvider = new()
+            {
+                Name = "Mechanikas",
+                Country = "LTU",
+                VATPayer = true
+            };
         }
     }
 }
