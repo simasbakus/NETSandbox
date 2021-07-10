@@ -1,5 +1,9 @@
 ﻿using NETSandbox.Entities;
+using Newtonsoft.Json;
+using NSubstitute;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace NETSandbox
 {
@@ -7,21 +11,7 @@ namespace NETSandbox
     {
         static void Main(string[] args)
         {
-            Customer customer = new()
-            {
-                Name = "Juozas",
-                LastName = "Juozaitis",
-                IsIndividual = true,
-                Address = "Laisves al. Kaunas",
-                Country = "LTU"
-            };
-
-            ServiceProvider serviceProvider = new()
-            {
-                Name = "Mechanikas",
-                Country = "LTU",
-                VATPayer = true
-            };
+            
         }
     }
 }

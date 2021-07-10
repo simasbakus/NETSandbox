@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETSandbox", "NETSandbox\NETSandbox.csproj", "{DA659B20-CD27-4AA4-9C32-997335075246}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETSandbox", "NETSandbox\NETSandbox.csproj", "{DA659B20-CD27-4AA4-9C32-997335075246}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETSandbox.Tests", "NETSandbox.Tests\NETSandbox.Tests.csproj", "{5E3E48D5-5F09-4380-9E87-4C930E65F3AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DA659B20-CD27-4AA4-9C32-997335075246}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA659B20-CD27-4AA4-9C32-997335075246}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA659B20-CD27-4AA4-9C32-997335075246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E3E48D5-5F09-4380-9E87-4C930E65F3AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E3E48D5-5F09-4380-9E87-4C930E65F3AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E3E48D5-5F09-4380-9E87-4C930E65F3AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E3E48D5-5F09-4380-9E87-4C930E65F3AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

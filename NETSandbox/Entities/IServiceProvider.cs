@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace NETSandbox.Entities
 {
-    class Customer
+    public interface IServiceProvider
     {
         public string Name { get; set; }
-        public string LastName { get; set; }
-        public string Company { get; set; }
-        public bool IsIndividual { get; set; }
-        public string Address { get; set; }
         public string Country { get; set; }
+        public bool VATPayer { get; set; }
     }
 }
