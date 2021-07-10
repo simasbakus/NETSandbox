@@ -29,7 +29,7 @@ namespace NETSandbox.Tests
         public void VATIsNotAdded_WhenProviderIsNotVATPayer()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, 100);
+            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
 
             _serviceProvider.VATPayer.Returns(false);
 
@@ -44,7 +44,7 @@ namespace NETSandbox.Tests
         public void VATIsNotAdded_WhenCustomerIsNotInEU()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, 100);
+            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
 
             _serviceProvider.VATPayer.Returns(true);
             _customer.CountryCode.Returns("USA");
@@ -60,7 +60,7 @@ namespace NETSandbox.Tests
         public void VATIsAdded_WhenCustomerAndProviderLiveInSameEUCountry()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, 100);
+            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
 
             _serviceProvider.VATPayer.Returns(true);
             _serviceProvider.Country.Returns("LT");
@@ -80,7 +80,7 @@ namespace NETSandbox.Tests
         public void VATIsAdded_WhenCustomerIsNotIndividualAndNotInSameCountryAsProvider()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, 100);
+            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
 
             _serviceProvider.VATPayer.Returns(true);
             _serviceProvider.Country.Returns("LT");
@@ -101,7 +101,7 @@ namespace NETSandbox.Tests
         public void VATIsAdded_WhenCustomerIsIndividualAndNotInSameCountryAsProvider()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, 100);
+            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
 
             _serviceProvider.VATPayer.Returns(true);
             _serviceProvider.Country.Returns("LT");

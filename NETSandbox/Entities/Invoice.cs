@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,13 +16,13 @@ namespace NETSandbox.Entities
         public int VATApplied { get; set; }
         public double TotalPriceWithVAT { get; set; }
 
-        public Invoice(ICustomer customer, IServiceProvider serviceProvider, int totalPrice)
+        public Invoice(ICustomer customer, IServiceProvider serviceProvider, List<VATRate> euCountriesWithVAT, int totalPrice)
         {
             _customer = customer;
             _serviceProvider = serviceProvider;
-            TotalPrice = totalPrice;
+            _euCountriesWithVAT = euCountriesWithVAT;
 
-            _euCountriesWithVAT = JsonConvert.DeserializeObject<List<VATRate>>(File.ReadAllText("EuVats.json"));
+            TotalPrice = totalPrice;
         }
 
         public void RecalculateTotalPriceWithVAT()
@@ -49,7 +47,7 @@ namespace NETSandbox.Entities
                 }
                 else
                 {
-
+                    //TODO When customer is not individual and lives in different country than the provider (0% reverse charge)
                 }
             }
         }
