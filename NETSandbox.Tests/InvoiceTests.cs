@@ -73,33 +73,15 @@ namespace NETSandbox.Tests
             Assert.AreEqual(customerCountry.VAT, _invoice.VATApplied);
         }
 
-        [Test]
-        public void VATIsAdded_WhenCustomerIsNotIndividualAndNotInSameCountryAsProvider()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void VATIsAdded_WhenCustomerIsNotInSameCountryAsProvider(bool customerIsIndividual)
         {
             // arrange
             _serviceProvider.VATPayer.Returns(true);
             _serviceProvider.Country.Returns("LT");
             _customer.CountryCode.Returns("AT");
-            _customer.IsIndividual.Returns(false);
-
-            var customerCountry = _euCountriesWithVAT.Find(x => x.Code == _customer.CountryCode);
-
-            // act
-            _invoice.RecalculateTotalPriceWithVAT();
-
-            // assert
-            Assert.AreNotEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
-            Assert.AreEqual(customerCountry.VAT, _invoice.VATApplied);
-        }
-
-        [Test]
-        public void VATIsAdded_WhenCustomerIsIndividualAndNotInSameCountryAsProvider()
-        {
-            // arrange
-            _serviceProvider.VATPayer.Returns(true);
-            _serviceProvider.Country.Returns("LT");
-            _customer.CountryCode.Returns("AT");
-            _customer.IsIndividual.Returns(true);
+            _customer.IsIndividual.Returns(customerIsIndividual);
 
             var customerCountry = _euCountriesWithVAT.Find(x => x.Code == _customer.CountryCode);
 
