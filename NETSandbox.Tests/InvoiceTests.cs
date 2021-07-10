@@ -11,6 +11,7 @@ namespace NETSandbox.Tests
     {
         private ICustomer _customer;
         private IServiceProvider _serviceProvider;
+        private Invoice _invoice;
         private readonly List<VATRate> _euCountriesWithVAT;
 
         public InvoiceTests()
@@ -23,45 +24,41 @@ namespace NETSandbox.Tests
         {
             _customer = Substitute.For<ICustomer>();
             _serviceProvider = Substitute.For<IServiceProvider>();
+
+            _invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
         }
 
         [Test]
         public void VATIsNotAdded_WhenProviderIsNotVATPayer()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
-
             _serviceProvider.VATPayer.Returns(false);
 
             // act
-            invoice.RecalculateTotalPriceWithVAT();
+            _invoice.RecalculateTotalPriceWithVAT();
 
             // assert
-            Assert.AreEqual(invoice.TotalPrice, invoice.TotalPriceWithVAT);
+            Assert.AreEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
         }
 
         [Test]
         public void VATIsNotAdded_WhenCustomerIsNotInEU()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
-
             _serviceProvider.VATPayer.Returns(true);
             _customer.CountryCode.Returns("USA");
 
             // act
-            invoice.RecalculateTotalPriceWithVAT();
+            _invoice.RecalculateTotalPriceWithVAT();
 
             // assert
-            Assert.AreEqual(invoice.TotalPrice, invoice.TotalPriceWithVAT);
+            Assert.AreEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
         }
 
         [Test]
         public void VATIsAdded_WhenCustomerAndProviderLiveInSameEUCountry()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
-
             _serviceProvider.VATPayer.Returns(true);
             _serviceProvider.Country.Returns("LT");
             _customer.CountryCode.Returns("LT");
@@ -69,19 +66,17 @@ namespace NETSandbox.Tests
             var customerCountry = _euCountriesWithVAT.Find(x => x.Code == _customer.CountryCode);
 
             // act
-            invoice.RecalculateTotalPriceWithVAT();
+            _invoice.RecalculateTotalPriceWithVAT();
 
             // assert
-            Assert.AreNotEqual(invoice.TotalPrice, invoice.TotalPriceWithVAT);
-            Assert.AreEqual(customerCountry.VAT, invoice.VATApplied);
+            Assert.AreNotEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
+            Assert.AreEqual(customerCountry.VAT, _invoice.VATApplied);
         }
 
         [Test]
         public void VATIsAdded_WhenCustomerIsNotIndividualAndNotInSameCountryAsProvider()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
-
             _serviceProvider.VATPayer.Returns(true);
             _serviceProvider.Country.Returns("LT");
             _customer.CountryCode.Returns("AT");
@@ -90,19 +85,17 @@ namespace NETSandbox.Tests
             var customerCountry = _euCountriesWithVAT.Find(x => x.Code == _customer.CountryCode);
 
             // act
-            invoice.RecalculateTotalPriceWithVAT();
+            _invoice.RecalculateTotalPriceWithVAT();
 
             // assert
-            Assert.AreNotEqual(invoice.TotalPrice, invoice.TotalPriceWithVAT);
-            Assert.AreEqual(customerCountry.VAT, invoice.VATApplied);
+            Assert.AreNotEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
+            Assert.AreEqual(customerCountry.VAT, _invoice.VATApplied);
         }
 
         [Test]
         public void VATIsAdded_WhenCustomerIsIndividualAndNotInSameCountryAsProvider()
         {
             // arrange
-            var invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
-
             _serviceProvider.VATPayer.Returns(true);
             _serviceProvider.Country.Returns("LT");
             _customer.CountryCode.Returns("AT");
@@ -111,11 +104,11 @@ namespace NETSandbox.Tests
             var customerCountry = _euCountriesWithVAT.Find(x => x.Code == _customer.CountryCode);
 
             // act
-            invoice.RecalculateTotalPriceWithVAT();
+            _invoice.RecalculateTotalPriceWithVAT();
 
             // assert
-            Assert.AreNotEqual(invoice.TotalPrice, invoice.TotalPriceWithVAT);
-            Assert.AreEqual(customerCountry.VAT, invoice.VATApplied);
+            Assert.AreNotEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
+            Assert.AreEqual(customerCountry.VAT, _invoice.VATApplied);
         }
     }
 }
