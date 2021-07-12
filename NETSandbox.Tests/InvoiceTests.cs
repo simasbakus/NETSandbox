@@ -28,11 +28,15 @@ namespace NETSandbox.Tests
             _invoice = new Invoice(_customer, _serviceProvider, _euCountriesWithVAT, 100);
         }
 
-        [Test]
-        public void VATIsNotAdded_WhenProviderIsNotVATPayer()
+        [TestCase(false)] // service provider is not a VAT payer
+        [TestCase(true, "USA")] // service provider is VAT payer but customer is not from EU
+        [TestCase(true, "LT", "AT")] // service provider and customer are VAT payers and from different countries
+        public void VATIsNotAdded(bool providerVATPayer, string customerCountry = "", string providerCountry = "")
         {
             // arrange
-            _serviceProvider.VATPayer.Returns(false);
+            _serviceProvider.VATPayer.Returns(providerVATPayer);
+            _customer.CountryCode.Returns(customerCountry);
+            _serviceProvider.Country.Returns(providerCountry);
 
             // act
             _invoice.RecalculateTotalPriceWithVAT();
@@ -41,56 +45,26 @@ namespace NETSandbox.Tests
             Assert.AreEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
         }
 
-        [Test]
-        public void VATIsNotAdded_WhenCustomerIsNotInEU()
+        [TestCase(true, "LT", "AT", true)] // different countries, provider is a VAT payer, but customer is not
+        [TestCase(true, "LT", "LT", false)] // same countries, provider and customer both VAT payers
+        public void VATIsAdded(bool providerVATPayer, string providerCountry, string customerCountry, bool customerIsIndividual)
         {
             // arrange
-            _serviceProvider.VATPayer.Returns(true);
-            _customer.CountryCode.Returns("USA");
-
-            // act
-            _invoice.RecalculateTotalPriceWithVAT();
-
-            // assert
-            Assert.AreEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
-        }
-
-        [Test]
-        public void VATIsAdded_WhenCustomerAndProviderLiveInSameEUCountry()
-        {
-            // arrange
-            _serviceProvider.VATPayer.Returns(true);
-            _serviceProvider.Country.Returns("LT");
-            _customer.CountryCode.Returns("LT");
-
-            var customerCountry = _euCountriesWithVAT.Find(x => x.Code == _customer.CountryCode);
-
-            // act
-            _invoice.RecalculateTotalPriceWithVAT();
-
-            // assert
-            Assert.AreNotEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
-            Assert.AreEqual(customerCountry.VAT, _invoice.VATApplied);
-        }
-
-        [TestCase(false)]
-        [TestCase(true)]
-        public void VATIsAdded_WhenCustomerIsNotInSameCountryAsProvider(bool customerIsIndividual)
-        {
-            // arrange
-            _serviceProvider.VATPayer.Returns(true);
-            _serviceProvider.Country.Returns("LT");
-            _customer.CountryCode.Returns("AT");
+            _serviceProvider.VATPayer.Returns(providerVATPayer);
+            _serviceProvider.Country.Returns(providerCountry);
+            _customer.CountryCode.Returns(customerCountry);
             _customer.IsIndividual.Returns(customerIsIndividual);
 
-            var customerCountry = _euCountriesWithVAT.Find(x => x.Code == _customer.CountryCode);
+            var customerCountryWithVAT = _euCountriesWithVAT.Find(x => x.Code == _customer.CountryCode);
 
             // act
             _invoice.RecalculateTotalPriceWithVAT();
 
             // assert
             Assert.AreNotEqual(_invoice.TotalPrice, _invoice.TotalPriceWithVAT);
-            Assert.AreEqual(customerCountry.VAT, _invoice.VATApplied);
+            Assert.AreEqual(customerCountryWithVAT.VAT, _invoice.VATApplied);
         }
+
+
     }
 }

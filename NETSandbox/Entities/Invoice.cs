@@ -47,7 +47,11 @@ namespace NETSandbox.Entities
                 }
                 else
                 {
-                    //TODO When customer is not individual and lives in different country than the provider (0% reverse charge)
+                    /* When customer is not individual and lives in different country than */
+                    /* the provider (0% reverse charge)                                    */
+
+                    TotalPriceWithVAT = TotalPrice;
+                    VATApplied = 0;
                 }
             }
         }
